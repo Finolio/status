@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Estado de Finolio</title>
+<meta name="robots" content="noindex">
+<style>
+  :root {
+    --bg: #f7f8fa;
+    --card-bg: #ffffff;
+    --border: #e5e7eb;
+    --text: #1a1d23;
+    --text-muted: #6b7280;
+    --ok-bg: #ecfdf3;
+    --ok-fg: #027a48;
+    --ok-dot: #12b76a;
+    --incident-bg: #fef3f2;
+    --incident-fg: #b42318;
+    --incident-dot: #f04438;
+    --degraded-bg: #fffaeb;
+    --degraded-fg: #b54708;
+    --degraded-dot: #f79009;
+    --link: #2563eb;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f1115;
+      --card-bg: #171a21;
+      --border: #2a2e37;
+      --text: #e8eaed;
+      --text-muted: #9aa1ac;
+      --ok-bg: #0d2818;
+      --ok-fg: #3dd68c;
+      --ok-dot: #22c55e;
+      --incident-bg: #2a1412;
+      --incident-fg: #ff8a80;
+      --incident-dot: #ef4444;
+      --degraded-bg: #2a2010;
+      --degraded-fg: #fbbf24;
+      --degraded-dot: #f59e0b;
+      --link: #60a5fa;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  .card {
+    width: 100%;
+    max-width: 480px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px 28px;
+  }
+  .wordmark {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--text-muted);
+    margin: 0 0 20px;
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .badge .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  /* Estado OPERATIVO (default) */
+  .badge { background: var(--ok-bg); color: var(--ok-fg); }
+  .badge .dot { background: var(--ok-dot); }
+
+  /* Para marcar un INCIDENTE: agregar la clase "incident" al <body> */
+  body.incident .badge { background: var(--incident-bg); color: var(--incident-fg); }
+  body.incident .badge .dot { background: var(--incident-dot); animation: pulse 1.6s ease-in-out infinite; }
+
+  /* Para marcar DEGRADADO (parcial): agregar la clase "degraded" al <body> */
+  body.degraded .badge { background: var(--degraded-bg); color: var(--degraded-fg); }
+  body.degraded .badge .dot { background: var(--degraded-dot); }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+  h1 {
+    font-size: 22px;
+    margin: 18px 0 8px;
+    line-height: 1.3;
+  }
+  p.message {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--text-muted);
+    margin: 0 0 20px;
+  }
+  .updated {
+    font-size: 13px;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border);
+    padding-top: 16px;
+  }
+  .updated strong { color: var(--text); font-weight: 600; }
+  a { color: var(--link); }
+</style>
+</head>
+<!--
+  CÓMO ACTUALIZAR ESTA PÁGINA DURANTE UN INCIDENTE:
+
+  1. Cambiar la clase del <body> más abajo:
+       - Todo bien:      <body>
+       - Incidente:      <body class="incident">
+       - Degradado:      <body class="degraded">
+
+  2. Editar el texto del <h1> y del <p class="message"> con lo que esté pasando.
+
+  3. Editar la fecha/hora dentro de <span id="updated-at">.
+
+  4. Guardar, git commit, git push a main. GitHub Pages lo publica solo en 1-2 min.
+-->
+<body>
+  <div class="card">
+    <p class="wordmark">FINOLIO</p>
+
+    <span class="badge"><span class="dot"></span>Operativo</span>
+
+    <h1>Todo funcionando con normalidad</h1>
+    <p class="message">
+      No hay incidentes activos. Si estás teniendo problemas para acceder a
+      <a href="https://finolio.io">finolio.io</a>, puede ser algo puntual —
+      probá de nuevo en unos minutos.
+    </p>
+
+    <p class="updated">
+      Última actualización: <strong><span id="updated-at">31 ago 2026, 19:00 ART</span></strong>
+    </p>
+  </div>
+</body>
+</html>
