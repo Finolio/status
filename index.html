@@ -62,12 +62,18 @@
     border-radius: 16px;
     padding: 32px 28px;
   }
-  .wordmark {
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 20px;
+  }
+  .brand svg { width: 22px; height: 22px; flex-shrink: 0; }
+  .brand span {
     font-size: 15px;
     font-weight: 700;
     letter-spacing: -0.01em;
     color: var(--text-muted);
-    margin: 0 0 20px;
   }
   .badge {
     display: inline-flex;
@@ -135,21 +141,37 @@
 
   4. Guardar, git commit, git push a main. GitHub Pages lo publica solo en 1-2 min.
 -->
-<body>
+<body class="incident">
   <div class="card">
-    <p class="wordmark">FINOLIO</p>
+    <div class="brand">
+      <svg viewBox="0 0 566 400" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <g transform="matrix(1.206055,0,0,1.206055,157.328283,36.5)">
+          <path d="M4.096,142.577C4.309,138.99 4.361,139.101 4.765,135.535C6.446,92.023 -1.523,59.688 35.699,25.721C64.522,-0.581 97.234,3.493 128.5,3.429C136.82,3.411 230.194,3.217 232.495,3.53C235.665,3.96 236.435,6.437 232.336,20.45C222.523,54.005 198.803,72.263 171.501,73.023C90.847,75.268 88.219,65.818 51.259,86.056C40.796,91.786 14.498,113.639 8.153,142.427C6.432,150.237 4.191,142.888 4.096,142.577Z" style="fill:rgb(57,230,161);fill-opacity:0.99;"/>
+        </g>
+        <g transform="matrix(1.206055,0,0,1.206055,157.328283,36.5)">
+          <path d="M151.993,159.982C115.859,197.971 83.813,156.221 29.744,203.772C20.485,211.916 8.945,229.735 8.581,231.544C8.488,232.007 6.965,239.573 4.963,236.224C3.333,233.496 5.46,233.196 5.249,196.506C5.036,159.448 35.523,109.468 93.5,109.491C165.262,109.521 165.279,108.908 171.453,109.792C177.132,110.605 170.555,139.209 154.459,157.465C153.887,158.113 153.89,158.078 151.993,159.982Z" style="fill:url(#_statusLogoGrad);"/>
+        </g>
+        <g transform="matrix(1.206055,0,0,1.206055,157.328283,36.5)">
+          <path d="M32.16,223.044C34.133,221.702 48.912,211.652 60.469,213.65C68.992,215.123 53.402,269.638 15.509,274.565C8.476,275.48 5.587,276.096 6.048,270.452C8.412,241.508 28.742,225.702 32.16,223.044Z" style="fill:rgb(59,222,145);fill-opacity:0.99;"/>
+        </g>
+        <defs>
+          <linearGradient id="_statusLogoGrad" x1="0" y1="0" x2="1" y2="0" gradientUnits="userSpaceOnUse" gradientTransform="matrix(169.118233,0,0,127.764916,4.343693,173.193966)"><stop offset="0" style="stop-color:rgb(79,227,161);stop-opacity:1"/><stop offset="1" style="stop-color:rgb(31,175,122);stop-opacity:1"/></linearGradient>
+        </defs>
+      </svg>
+      <span>FINOLIO</span>
+    </div>
 
-    <span class="badge"><span class="dot"></span>Operativo</span>
+    <span class="badge"><span class="dot"></span>Incidente activo</span>
 
-    <h1>Todo funcionando con normalidad</h1>
+    <h1>Finolio no está disponible</h1>
     <p class="message">
-      No hay incidentes activos. Si estás teniendo problemas para acceder a
-      <a href="https://finolio.io">finolio.io</a>, puede ser algo puntual —
-      probá de nuevo en unos minutos.
+      Estamos con una caída del proveedor de hosting, no algo de tu cuenta ni
+      de tus datos. Ya estamos al tanto y trabajando para restablecer el
+      servicio. Apenas vuelva, dejás de ver este mensaje automáticamente.
     </p>
 
     <p class="updated">
-      Última actualización: <strong><span id="updated-at">31 ago 2026, 19:00 ART</span></strong>
+      Última actualización: <strong><span id="updated-at">31 ago 2026, 20:30 ART</span></strong>
     </p>
   </div>
 </body>
