@@ -90,15 +90,18 @@
     border-radius: 50%;
     flex-shrink: 0;
   }
-  /* Estado OPERATIVO (default) */
-  .badge { background: var(--ok-bg); color: var(--ok-fg); }
-  .badge .dot { background: var(--ok-dot); }
+  /* Estado por defecto mientras el JS todavía no contestó: neutro, ni
+     verde ni rojo — evitamos afirmar algo que todavía no comprobamos. */
+  .badge { background: var(--border); color: var(--text-muted); }
+  .badge .dot { background: var(--text-muted); animation: pulse 1.6s ease-in-out infinite; }
 
-  /* Para marcar un INCIDENTE: agregar la clase "incident" al <body> */
+  body.operational .badge { background: var(--ok-bg); color: var(--ok-fg); }
+  body.operational .badge .dot { background: var(--ok-dot); animation: none; }
+
   body.incident .badge { background: var(--incident-bg); color: var(--incident-fg); }
   body.incident .badge .dot { background: var(--incident-dot); animation: pulse 1.6s ease-in-out infinite; }
 
-  /* Para marcar DEGRADADO (parcial): agregar la clase "degraded" al <body> */
+  /* Para marcar DEGRADADO (parcial) a mano: agregar la clase "degraded" al <body> */
   body.degraded .badge { background: var(--degraded-bg); color: var(--degraded-fg); }
   body.degraded .badge .dot { background: var(--degraded-dot); }
 
@@ -128,20 +131,23 @@
 </style>
 </head>
 <!--
-  CÓMO ACTUALIZAR ESTA PÁGINA DURANTE UN INCIDENTE:
+  EL BADGE (verde/rojo) YA NO SE EDITA A MANO — el script de abajo le pega a
+  https://app.finolio.io/up al cargar la página y decide solo si mostrar
+  "Operativo" o "Incidente activo". Esto vale tanto si entrás acá directo
+  como si te la mostró el Worker de failover.
 
-  1. Cambiar la clase del <body> más abajo:
-       - Todo bien:      <body>
-       - Incidente:      <body class="incident">
-       - Degradado:      <body class="degraded">
+  Lo que SÍ conviene editar a mano durante un incidente real es el texto de
+  contexto (el <p id="incident-message"> de abajo) — el chequeo automático
+  no sabe *por qué* está caído, así que dejá ahí la explicación puntual
+  (ej. "es DonWeb, no nuestro, sin ETA todavía").
 
-  2. Editar el texto del <h1> y del <p class="message"> con lo que esté pasando.
+  Para marcar DEGRADADO (caída parcial, no detectable con un solo ping):
+  no hay automatismo — cambiá el texto de contexto y, si querés, forzá el
+  color con class="degraded" en el <body>.
 
-  3. Editar la fecha/hora dentro de <span id="updated-at">.
-
-  4. Guardar, git commit, git push a main. GitHub Pages lo publica solo en 1-2 min.
+  Guardar, git commit, git push a main. GitHub Pages lo publica solo en 1-2 min.
 -->
-<body class="incident">
+<body>
   <div class="card">
     <div class="brand">
       <svg viewBox="0 0 566 400" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -161,18 +167,60 @@
       <span>FINOLIO</span>
     </div>
 
-    <span class="badge"><span class="dot"></span>Incidente activo</span>
+    <span class="badge"><span class="dot"></span><span id="badge-text">Verificando…</span></span>
 
-    <h1>Finolio no está disponible</h1>
-    <p class="message">
+    <h1 id="title">Comprobando el estado de Finolio</h1>
+    <p class="message" id="incident-message">
       Estamos con una caída del proveedor de hosting, no algo de tu cuenta ni
       de tus datos. Ya estamos al tanto y trabajando para restablecer el
-      servicio. Apenas vuelva, dejás de ver este mensaje automáticamente.
+      servicio.
     </p>
 
     <p class="updated">
-      Última actualización: <strong><span id="updated-at">31 ago 2026, 20:30 ART</span></strong>
+      Última actualización del texto de contexto:
+      <strong><span id="updated-at">31 ago 2026, 20:30 ART</span></strong>
     </p>
   </div>
+
+  <script>
+    (function () {
+      var TIMEOUT_MS = 5000;
+      var controller = new AbortController();
+      var timer = setTimeout(function () { controller.abort(); }, TIMEOUT_MS);
+
+      // no-cors: no podemos leer el status/body (ni hace falta), solo nos
+      // importa si la promesa resuelve (hay red hasta el origin) o no
+      // (timeout / conexión rechazada = está caído).
+      fetch('https://app.finolio.io/up', {
+        mode: 'no-cors',
+        cache: 'no-store',
+        signal: controller.signal,
+      }).then(function () {
+        clearTimeout(timer);
+        markOperational();
+      }).catch(function () {
+        clearTimeout(timer);
+        markIncident();
+      });
+
+      function markOperational() {
+        document.body.className = 'operational';
+        document.getElementById('badge-text').textContent = 'Operativo';
+        document.getElementById('title').textContent = 'Todo funcionando con normalidad';
+        document.getElementById('incident-message').innerHTML =
+          'No hay incidentes activos. Si igual no podés entrar a ' +
+          '<a href="https://finolio.io">finolio.io</a>, puede ser algo puntual tuyo — ' +
+          'probá de nuevo en unos minutos.';
+      }
+
+      function markIncident() {
+        document.body.className = 'incident';
+        document.getElementById('badge-text').textContent = 'Incidente activo';
+        document.getElementById('title').textContent = 'Finolio no está disponible';
+        // El texto de <p id="incident-message"> ya trae el mensaje de contexto
+        // cargado a mano en el HTML — no lo tocamos acá.
+      }
+    })();
+  </script>
 </body>
 </html>
