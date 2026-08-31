@@ -171,9 +171,10 @@
 
     <h1 id="title">Comprobando el estado de Finolio</h1>
     <p class="message" id="incident-message">
-      Estamos con una caída del proveedor de hosting, no algo de tu cuenta ni
-      de tus datos. Ya estamos al tanto y trabajando para restablecer el
-      servicio.
+      Es una caída de nuestro proveedor de hosting, no algo de tu cuenta ni
+      de tus datos — no depende de nosotros arreglarla directamente.
+      Estamos siguiendo la situación de cerca y esto vuelve solo apenas
+      ellos la resuelvan de su lado.
     </p>
 
     <p class="updated">
@@ -188,16 +189,24 @@
       var controller = new AbortController();
       var timer = setTimeout(function () { controller.abort(); }, TIMEOUT_MS);
 
-      // no-cors: no podemos leer el status/body (ni hace falta), solo nos
-      // importa si la promesa resuelve (hay red hasta el origin) o no
-      // (timeout / conexión rechazada = está caído).
-      fetch('https://app.finolio.io/up', {
-        mode: 'no-cors',
+      // Le preguntamos al propio Worker de failover qué sabe (lo que dejó
+      // guardado su chequeo periódico contra el origin real) — no le
+      // pegamos nosotros a /up. Es un endpoint con CORS habilitado que
+      // devuelve JSON legible, sin la ambigüedad de un fetch no-cors
+      // (que no puede distinguir un 200 real de la propia página de
+      // caída sirviéndose a sí misma).
+      fetch('https://app.finolio.io/__failover_health', {
         cache: 'no-store',
         signal: controller.signal,
-      }).then(function () {
+      }).then(function (res) {
+        return res.json();
+      }).then(function (data) {
         clearTimeout(timer);
-        markOperational();
+        if (data.up) {
+          markOperational();
+        } else {
+          markIncident();
+        }
       }).catch(function () {
         clearTimeout(timer);
         markIncident();
