@@ -114,12 +114,14 @@
     margin: 18px 0 8px;
     line-height: 1.3;
   }
-  p.message {
+  .message {
     font-size: 15px;
     line-height: 1.6;
     color: var(--text-muted);
     margin: 0 0 20px;
   }
+  .message p { margin: 0 0 12px; }
+  .message p:last-child { margin-bottom: 0; }
   .updated {
     font-size: 13px;
     color: var(--text-muted);
@@ -170,16 +172,22 @@
     <span class="badge"><span class="dot"></span><span id="badge-text">Verificando…</span></span>
 
     <h1 id="title">Comprobando el estado de Finolio</h1>
-    <p class="message" id="incident-message">
-      Es una caída de nuestro proveedor de hosting, no algo de tu cuenta ni
-      de tus datos — no depende de nosotros arreglarla directamente.
-      Estamos siguiendo la situación de cerca y esto vuelve solo apenas
-      ellos la resuelvan de su lado.
-    </p>
+    <div class="message" id="incident-message">
+      <p>Actualmente estamos experimentando una interrupción en el acceso a
+      nuestra aplicación, lo que puede impedir o dificultar la operación
+      normal del sistema.</p>
+      <p>El inconveniente está relacionado con la infraestructura donde se
+      encuentra alojada la aplicación. Nuestro equipo ya se encuentra
+      trabajando junto con el proveedor para identificar el origen del
+      problema y restablecer el servicio.</p>
+      <p>Les informaremos cualquier novedad y confirmaremos una vez que el
+      sistema vuelva a estar operativo.</p>
+      <p>Agradecemos la comprensión.</p>
+    </div>
 
     <p class="updated">
       Última actualización del texto de contexto:
-      <strong><span id="updated-at">31 ago 2026, 20:30 ART</span></strong>
+      <strong><span id="updated-at">1 sep 2026</span></strong>
     </p>
   </div>
 
